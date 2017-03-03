@@ -1,0 +1,5 @@
+---
+# defaults file for samba
+
+samba_group: group_samba
+

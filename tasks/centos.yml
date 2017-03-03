@@ -1,0 +1,35 @@
+---
+# tasks file for installing samba on centos7
+
+- name: install samba releated package
+  yum: name={{ item }} state=present
+  with_items:
+    - samba
+    - cifs-utils
+
+- name: make sure samba group exists
+  group: name={{ samba_group }} state=present
+
+- name: add users
+  user: name={{ item.name }}
+        groups={{ samba_group }}
+        state={{ item.state }}
+  with_items: "{{ samba_user_config | default([])}}"
+  when: samba_user_config is defined
+
+- name: set samba password for user
+  shell: echo -ne "{{ item.password }}\n{{ item.password }}\n" | smbpasswd -a -s {{ item.name }}
+  with_items: "{{ samba_user_config | default([])}}"
+  when: samba_user_config is defined
+
+- name: create dir for samba, configure permission
+  file: path={{ item.local_path }} group={{ samba_group }} mode=770 state=directory
+  with_items: "{{ samba_user_config | default([])}}"
+  when: samba_user_config is defined
+
+- name: template /etc/samba/smb.conf
+  template: src=etc/samba/smb.conf.j2 dest=/etc/samba/smb.conf mode=644
+  notify: restart samba
+
+- name: start and enable samba
+  service: name=smb state=started enabled=yes
