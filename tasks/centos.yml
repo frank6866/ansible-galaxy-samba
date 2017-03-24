@@ -28,7 +28,7 @@
   when: samba_user_config is defined
 
 - name: template /etc/samba/smb.conf
-  template: src=etc/samba/smb.conf.j2 dest=/etc/samba/smb.conf mode=644
+  template: src=etc/samba/smb.conf.j2 dest=/etc/samba/smb.conf mode=644 backup=yes
   notify: restart samba
 
 - name: start and enable samba
