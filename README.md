@@ -1,28 +1,26 @@
-ansible deploy samba role
-=========================
+# ansible deploy samba role
 
 This role is uesd to deploy samba server.
 
+## Inventory file demo
 
-
-Inventory file demo
--------------------
 ```
 samba-1 ansible_ssh_host=10.10.10.10 ansible_ssh_port=2233 ansible_ssh_user=root
 
 [samba]
 samba-1
-
 ```
 
 
-Role Variables
---------------
+## Role Variables
+
 No required vars, the optional var as follows:
 
 The default group name of samba user is **group_samba**, you can change it by setting **samba_group** variable:
 
-> samba_group: sambas
+```
+samba_group: sambas
+```
 
 
 If you wan to add user and config path for user, you can set the following variable:
@@ -38,8 +36,7 @@ samba_user_config:
 ```
 
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```
 - hosts: samba
@@ -49,28 +46,31 @@ Example Playbook
 ```
 
 
-Verify on client
-----------------
-Assuming we use CentOS7.
+## mount on client
+### CentOS7
 
-Install client:
+Install cifs-utils(Common Internet File System):
 
-> yum install cifs-utils
+```
+# yum install cifs-utils
+```
 
 Create a directory before mounting:
 
-> mkdir smb_mount
+```
+# mkdir smb_mount
+```
 
 Mount remote path to the directory we create:
 
-> mount.cifs //10.10.10.10/frank smb_mount/ -o user=suse,pass=change_me
+```
+# mount.cifs //10.10.10.10/frank smb_mount/ -o user=suse,pass=change_me
+```
 
 
 **Enjoy it!**
 
 
-License
--------
+# License
 
 MIT
-
